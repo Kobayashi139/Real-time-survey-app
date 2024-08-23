@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/app
+    environment:
+      - WATCHPACK_POLLING=true
+    command: sh -c "npm run dev"
+    ports:
+      - '3000:3000'

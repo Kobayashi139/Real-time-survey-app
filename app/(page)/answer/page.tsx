@@ -116,7 +116,7 @@ const answerPage = () => {
   return (
     <div className="p-10 m-0 bg-slate-100">
       <div className="mb-5 p-5 border-4 border-sky-500 rounded-lg">
-        <p className="text-gray-950 text-lg mb-4">何系の学部出身ですか？</p>
+        <p className="text-gry text-lg mb-4">何系の学部出身ですか？</p>
         <div className="flex space-x-4">
           <button
             onClick={() => answer('文系')}

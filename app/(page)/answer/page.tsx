@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
+import Header from '../../components/layouts/header/Header';
 import {
   Chart as ChartJS,
   Title,
@@ -114,7 +115,8 @@ const answerPage = () => {
   };
 
   return (
-    <div className="p-10 m-0 bg-slate-100">
+    <div className="p-10 m-0">
+      <Header />
       <div className="mb-5 p-5 border-4 border-sky-500 rounded-lg">
         <p className="text-gry text-lg mb-4">何系の学部出身ですか？</p>
         <div className="flex space-x-4">

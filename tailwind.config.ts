@@ -15,6 +15,10 @@ const config: Config = {
       },
       colors: {
         gry: '#1E2020',
+        nano: '#00ace0',
+        ppl: '#671e8b',
+        yel: '#ffe71a',
+        ble: '#003CE0',
       },
     },
   },

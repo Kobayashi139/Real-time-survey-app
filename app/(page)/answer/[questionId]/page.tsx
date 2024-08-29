@@ -147,7 +147,7 @@ const AnswerView: React.FC = () => {
         ref={commentEndRef}
       >
         {displayComment.map((comment, index) => (
-          <p key={index} className="ml-4 mt-2">
+          <p key={index} className="ml-4 mt-2 truncate">
             {comment}
           </p>
         ))}

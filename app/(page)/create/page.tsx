@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation'; //"next/router"は旧バージョン
+import Header from '../../components/layouts/header/Header';
 
 const CreateQuestion: React.FC = () => {
   const [question, setQuestion] = useState<string>(''); //質問
@@ -35,40 +36,43 @@ const CreateQuestion: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        質問内容:
-        <input
-          type="text"
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)} //target=input setQuestion=questionの更新
-          required
-        />
-      </label>
-      <hr />
+    <div className="p-10 m-0">
+      <Header />
+      <form onSubmit={handleSubmit}>
+        <label>
+          質問内容:
+          <input
+            type="text"
+            value={question}
+            onChange={(e) => setQuestion(e.target.value)} //target=input setQuestion=questionの更新
+            required
+          />
+        </label>
+        <hr />
 
-      <label>解答選択肢:</label>
-      {options.map(
-        (
-          option,
-          index //{ }で囲うとJSになるmap(option, 何番目か)
-        ) => (
-          <div key={index}>
-            <input
-              type="text"
-              value={option}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              required
-            />
-          </div>
-        )
-      )}
-      <button type="button" onClick={addOption}>
-        ＋選択肢を追加
-      </button>
-      <hr />
-      <button type="submit">質問を作成</button>
-    </form>
+        <label>解答選択肢:</label>
+        {options.map(
+          (
+            option,
+            index //{ }で囲うとJSになるmap(option, 何番目か)
+          ) => (
+            <div key={index}>
+              <input
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                required
+              />
+            </div>
+          )
+        )}
+        <button type="button" onClick={addOption}>
+          ＋選択肢を追加
+        </button>
+        <hr />
+        <button type="submit">質問を作成</button>
+      </form>
+    </div>
   );
 };
 

@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // "next/router"ではなく"next/navigation"を使用
 import Header from '../../../components/layouts/header/Header';
 import { useRouter } from 'next/navigation'; //"next/router"は旧バージョン
+import SubmitButton from '../../../components/layouts/SubmitButton';
 
 type Params = {
   questionId: string; //questionIdオブジェクトの型定義
@@ -45,28 +46,38 @@ const QuestionView: React.FC = () => {
     return <div>質問が見つかりません</div>;
   }
 
-  const nextPage = () => {
+  const nextPage = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); //デフォルトの送信動作を防ぐ
     router.push(`/survey/${questionId}`); //URLの作成
   };
 
   return (
-    <div className="p-10 m-0">
+    <div className="p-10 m-0 text-gry">
       <Header />
-      <h1>質問ID: {questionId}</h1>
-      <p>質問内容: {question}</p>
-      {options.map(
-        (
-          option,
-          index //{ }で囲うとJSになるmap(option, 何番目か)
-        ) => (
-          <div key={index}>
-            <p>{option}</p>
-          </div>
-        )
-      )}
-      <button type="submit" onClick={nextPage}>
-        アンケートを開始する
-      </button>
+      <div className="mt-6 w-full flex flex-col items-center">
+        <h2 className="text-xl font-bold">2. プレビューを確認する</h2>
+      </div>
+
+      <div className="mt-6 w-full flex flex-col items-center">
+        <p className="inline-block mt-2 w-3/4 p-3 text-gry text-2xl rounded-md mb-10">
+          {question}
+        </p>
+        {options.map(
+          (
+            option,
+            index //{ }で囲うとJSになるmap(option, 何番目か)
+          ) => (
+            <div key={index} className="w-3/4 mb-8 text-center">
+              <p className="w-full p-3  border border-nano rounded-md font-medium">
+                {option}
+              </p>
+            </div>
+          )
+        )}
+        <form onSubmit={nextPage}>
+          <SubmitButton title="アンケートを開始する" />
+        </form>
+      </div>
     </div>
   );
 };

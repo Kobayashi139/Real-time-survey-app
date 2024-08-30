@@ -35,8 +35,9 @@ const AnswerView: React.FC = () => {
   const [options, setOptions] = useState<string[]>(['']);
   const [votes, setVotes] = useState<number[]>([]);
   const [userComment, setUserComment] = useState<string>(''); //ユーザーのコメント
-  const [displayComment, setDisplayComment] = useState<string[]>([]); //実況
+  const [displayComment, setDisplayComment] = useState<string[]>([]);
   const commentEndRef = useRef<HTMLDivElement>(null); //スクロール位置を制御するためのref
+  const router = useRouter();
 
   useEffect(() => {
     if (!questionId) {
@@ -134,11 +135,11 @@ const AnswerView: React.FC = () => {
     }
   };
 
-  const removeStrage = () => {
-    const router = useRouter();
+  const removeStrage = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     localStorage.removeItem(questionId);
     localStorage.removeItem(`votes_${questionId}`);
-    router.push('/container');
+    router.push('/continue');
   };
 
   return (

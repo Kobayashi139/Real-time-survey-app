@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation'; // "next/router"ではなく"next/navigation"を使用
 import Header from '../../../components/layouts/header/Header';
 import { useRouter } from 'next/navigation'; //"next/router"は旧バージョン
+import SubmitButton from '../../../components/layouts/SubmitButton';
 
 type Params = {
   questionId: string; //questionIdオブジェクトの型定義
@@ -44,7 +45,8 @@ const QuestionView: React.FC = () => {
     return <div>質問が見つかりません</div>;
   }
 
-  const submitVote = () => {
+  const submitVote = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (selectedIndex === null) return; // インデックスが選択されていない場合は何もしない
 
     const votesKey = `votes_${questionId}`;
@@ -62,29 +64,33 @@ const QuestionView: React.FC = () => {
   };
 
   return (
-    <div className="p-10 m-0">
+    <div className="p-10 m-0 text-gry">
       <Header />
-      <h1>質問ID: {questionId}</h1>
-      <p>質問内容: {question}</p>
-      {options.map((option, index) => (
-        <div key={index}>
-          <button
-            onClick={() => setSelectedIndex(index)} // ボタンをクリックしたときに選択インデックスを更新
-            style={{
-              backgroundColor: selectedIndex === index ? 'lightblue' : 'white', // 選択中のボタンをハイライト
-            }}
-          >
-            {option}
-          </button>
+      <div className="mt-6 w-full flex flex-col items-center">
+        <div className="mt-6 w-full flex flex-col items-center">
+          <p className="inline-block mt-2 w-3/4 p-3 text-gry text-2xl rounded-md mb-10">
+            {question}
+          </p>
+          {options.map(
+            (
+              option,
+              index //{ }で囲うとJSになるmap(option, 何番目か)
+            ) => (
+              <div key={index} className="w-3/4 mb-8 text-center">
+                <button
+                  onClick={() => setSelectedIndex(index)}
+                  className="w-full p-3 rounded-md border-2 border-nano hover:bg-nano hover:text-neutral-50 focus:outline-none focus:border-ble focus:border-4 focus:bg-nano focus:text-neutral-50"
+                >
+                  {option}
+                </button>
+              </div>
+            )
+          )}
+          <form onSubmit={submitVote}>
+            <SubmitButton title="投票する" />
+          </form>
         </div>
-      ))}
-      <button
-        type="submit"
-        onClick={submitVote}
-        disabled={selectedIndex === null}
-      >
-        結果を見る
-      </button>
+      </div>
     </div>
   );
 };

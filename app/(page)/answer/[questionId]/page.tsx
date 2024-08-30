@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Header from '../../../components/layouts/header/Header';
+import SubmitButton from '../../../components/layouts/SubmitButton';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -82,7 +84,13 @@ const AnswerView: React.FC = () => {
     datasets: [
       {
         data: votes,
-        backgroundColor: ['#FF5733', '#aefa34', '#FFC300', '#3498db'],
+        backgroundColor: [
+          '#ff6929',
+          '#ffdd00',
+          '#20c563',
+          '#00ace0',
+          '#b094ca',
+        ],
       },
     ],
   };
@@ -126,46 +134,72 @@ const AnswerView: React.FC = () => {
     }
   };
 
-  return (
-    <div className="p-10 m-0">
-      <Header />
-      <h1>質問ID: {questionId}</h1>
-      <p>質問内容: {question}</p>
-      <div className="mb-4">
-        <Bar data={chartData} options={chartOptions} />
-      </div>
-      {options.map((option, index) => (
-        <div key={index}>
-          <p>
-            {option}: {votes[index] || 0} 票
-          </p>
-        </div>
-      ))}
+  const removeStrage = () => {
+    const router = useRouter();
+    localStorage.removeItem(questionId);
+    localStorage.removeItem(`votes_${questionId}`);
+    router.push('/container');
+  };
 
-      <div
-        className="border border-gray-400 h-32 overflow-y-auto mb-4 p-2"
-        ref={commentEndRef}
-      >
-        {displayComment.map((comment, index) => (
-          <p key={index} className="ml-4 mt-2 truncate">
-            {comment}
-          </p>
+  return (
+    <div className="p-10 m-0 text-gry">
+      <Header />
+      <div className="mt-2 w-full items-center">
+        <h1 className="inline-block mt-2 w-3/4 p-3 text-gry text-2xl mb-2">
+          {question}
+        </h1>
+
+        <div className="p-2 mb-2" style={{ width: '100%', height: '20rem' }}>
+          <Bar
+            data={chartData}
+            options={{ ...chartOptions, maintainAspectRatio: false }}
+          />
+        </div>
+
+        {options.map((option, index) => (
+          <div key={index}>
+            <p className="text-lg font-medium text-gry">
+              {option}: {votes[index] || 0} 票
+            </p>
+          </div>
         ))}
-      </div>
-      <div className="mb-4">
-        <input
-          type="text"
-          value={userComment}
-          onChange={(e) => setUserComment(e.target.value)}
-          placeholder="コメントする"
-          className="border border-gray-400 p-2 rounded w-48"
-        />
-        <button
-          onClick={postComment}
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 ml-2"
-        >
-          投稿する
-        </button>
+
+        <div className="mt-6 mb-4 border-2 border-nano rounded-md">
+          <p className="p-2">コメント</p>
+          <div
+            className="border-y-2 border-nano h-36 overflow-y-auto p-2"
+            ref={commentEndRef}
+          >
+            {displayComment.map((comment, index) => (
+              <p key={index} className="ml-4 mt-2 truncate">
+                {comment}
+              </p>
+            ))}
+          </div>
+
+          <div className="pt-4 pb-4 flex">
+            <input
+              type="text"
+              value={userComment}
+              onChange={(e) => setUserComment(e.target.value)}
+              placeholder="コメントする"
+              className="border-2 border-nano p-2 w-4/5 ml-4 mr-2 rounded-full w-48"
+            />
+            <button
+              onClick={postComment}
+              className="w-10 h-10 bg-nano hover:bg-ble rounded-full text-white text-2xl  "
+            >
+              <img
+                src="/sample/send.svg"
+                alt="送信"
+                className="size-8 m-auto"
+              />
+            </button>
+          </div>
+        </div>
+        <form className="mt-28" onSubmit={removeStrage}>
+          <SubmitButton title="アンケートを終了する" />
+        </form>
       </div>
     </div>
   );

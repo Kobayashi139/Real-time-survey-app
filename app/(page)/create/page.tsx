@@ -12,7 +12,7 @@ const CreateQuestion: React.FC = () => {
   const [error, setError] = useState<string>(''); // エラーメッセージ
 
   // 質問の文字数制限
-  const maxLength = 20;
+  const maxLength = 21;
 
   //React.FormEvent<HTMLFormElement: onSubmitの型定義
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -65,7 +65,7 @@ const CreateQuestion: React.FC = () => {
       >
         <input
           type="text"
-          placeholder="質問を記入する"
+          placeholder="質問を記入する(20文字以内)"
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           required
@@ -78,6 +78,7 @@ const CreateQuestion: React.FC = () => {
           <div key={index} className="w-3/4 mb-4">
             <input
               type="text"
+              placeholder="選択肢を記入する(20文字以内)"
               value={option}
               onChange={(e) => handleOptionChange(index, e.target.value)}
               required

@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import StartButton from './components/layouts/StartButton';
 
 export default function Home() {

@@ -1,4 +1,4 @@
-'use client';
+'use client'; //クライアントである
 
 import React from 'react';
 import StartButton from './components/layouts/StartButton';

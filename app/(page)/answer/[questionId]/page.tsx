@@ -31,9 +31,9 @@ type Params = {
 
 const AnswerView: React.FC = () => {
   const { questionId } = useParams<Params>();
-  const [question, setQuestion] = useState<string | null>(null);
-  const [options, setOptions] = useState<string[]>(['']);
-  const [votes, setVotes] = useState<number[]>([]);
+  const [question, setQuestion] = useState<string | null>(null); //質問
+  const [options, setOptions] = useState<string[]>(['']); //選択肢（文字）
+  const [votes, setVotes] = useState<number[]>([]); //選択肢ごとの選択数
   const [userComment, setUserComment] = useState<string>(''); //ユーザーのコメント
   const [displayComment, setDisplayComment] = useState<string[]>([]);
   const commentEndRef = useRef<HTMLDivElement>(null); //スクロール位置を制御するためのref
@@ -44,11 +44,15 @@ const AnswerView: React.FC = () => {
       return;
     }
 
-    const queData = localStorage.getItem(questionId);
-    const votesData = localStorage.getItem(`votes_${questionId}`);
+    const queData = localStorage.getItem(questionId); //質問選択肢"文字"データ
+    const votesData = localStorage.getItem(`votes_${questionId}`); //選択"数"データ
+    console.log(queData);
+    console.log(votesData);
+
     if (queData) {
       try {
         const questionData = JSON.parse(queData) as {
+          //オブジェクトに構成
           id: string;
           question: string;
           options: string[];
@@ -56,13 +60,14 @@ const AnswerView: React.FC = () => {
         setQuestion(questionData.question);
         setOptions(questionData.options);
       } catch (error) {
+        //データ取得ができなかったとき
         console.error('Error parsing stored data:', error);
       }
     }
 
     if (votesData) {
       try {
-        setVotes(JSON.parse(votesData));
+        setVotes(JSON.parse(votesData)); //選択肢ごとの選択数しか入っていないのでそのまま入れれる
       } catch (error) {
         console.error('Error parsing votes data:', error);
       }
@@ -72,11 +77,15 @@ const AnswerView: React.FC = () => {
   useEffect(() => {
     // 新しいコメントが追加されるたびに、スクロールを最下部に移動
     if (commentEndRef.current) {
-      commentEndRef.current.scrollTop = commentEndRef.current.scrollHeight;
+      //current：該当するDOM要素＝コメント欄
+      commentEndRef.current.scrollTop = commentEndRef.current.scrollHeight; //scrollHeight：要素の一番下に
+      //scrollTop：スクロールバーの位置、一番上が0、100にするとその分下にスクロールされる
+      console.log(commentEndRef.current.scrollTop);
     }
-  }, [displayComment]);
+  }, [displayComment]); //displayComment配列が変化したとき実行開始
 
   if (!questionId || !question) {
+    //質問がないとき
     return <div>質問が見つかりません</div>;
   }
 
@@ -124,12 +133,13 @@ const AnswerView: React.FC = () => {
 
   const postComment = () => {
     if (userComment.trim() !== '') {
+      //trim()：文字の両端から空白を取り除く
       const date = new Date();
-      const minutes = date.getMinutes().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0'); //2桁にする、先頭に0を付ける
       const seconds = date.getSeconds().toString().padStart(2, '0');
       setDisplayComment([
-        ...displayComment,
-        `${minutes}:${seconds} ${userComment}`,
+        ...displayComment, //これまでのコメントをコピー
+        `${minutes}:${seconds} ${userComment}`, //新規コメントを追加
       ]);
       setUserComment('');
     }

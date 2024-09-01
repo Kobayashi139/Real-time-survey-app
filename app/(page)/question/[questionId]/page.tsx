@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+// useEffect: HTTPリクエストでサーバーからの情報取得などの"副作用"を実現させる
 import { useParams } from 'next/navigation'; // "next/router"ではなく"next/navigation"を使用
 import Header from '../../../components/layouts/header/Header';
 import { useRouter } from 'next/navigation'; //"next/router"は旧バージョン
@@ -28,19 +29,22 @@ const QuestionView: React.FC = () => {
     if (queData) {
       try {
         const questionData = JSON.parse(queData) as {
+          //JSON.parse: 文字列をJSONとして解析し、文字列によって記述されているJSの値やオブジェクトを構築
           id: string;
           question: string;
           options: string[];
         };
-        setQuestion(questionData.question);
-        setOptions(questionData.options); // 同じオブジェクトからoptionsを取得
+        setQuestion(questionData.question); //questionを取得しuseState保存
+        setOptions(questionData.options); // 同様にoptionsを取得
         console.log(questionData.question); //質問内容
         console.log(questionData.options); //選択肢すべて
       } catch (error) {
-        console.error('Error parsing stored data:', error);
+        //例外が発生したとき、引数＝例外オブジェクト
+        console.error('Error parsing stored data:', error); //データが解析（取得）できません
       }
     }
-  }, [questionId]);
+  }, [questionId]); //引数に与えられたstateの変更に伴うレンダリング後に実行する
+  // 第2引数を空にすると、過大処理が起きる
 
   if (!questionId || !question) {
     return <div>質問が見つかりません</div>;

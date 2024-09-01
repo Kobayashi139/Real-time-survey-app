@@ -1,11 +1,13 @@
 import React from 'react';
 
 interface StartButtonProps {
+  //クラスが実装すべきフィールドやメソッドを定義した型
   title: string;
   url: string;
 }
 
 const StartButton: React.FC<StartButtonProps> = ({ title, url }) => {
+  //React/FC：constによる型定義でコンポーネントを定義できる型
   return (
     <div>
       <button className="group relative w-60 h-12 overflow-hidden overflow-x-hidden rounded-md bg-nano px-8 py-2 text-neutral-50 font-bold">

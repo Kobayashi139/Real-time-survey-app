@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'; //"next/router"は旧バージョン
 import Header from '../../components/layouts/header/Header';
 import SubmitButton from '../../components/layouts/SubmitButton';
@@ -12,11 +12,14 @@ const CreateQuestion: React.FC = () => {
   const [error, setError] = useState<string>(''); // エラーメッセージ
 
   // 質問の文字数制限
-  const maxLength = 21;
+  const maxLength = 20;
 
-  //React.FormEvent<HTMLFormElement: onSubmitの型定義
+  console.log(question);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // submitイベントの本来の動作=以下を動作させるため、ページ遷移を止める
+    // e: イベント, React.FormEvent<HTMLFormElement: onSubmitの型定義
+    // handle+イベント名
+    e.preventDefault(); // submitイベントの本来の動作=ページリロードをさせない。以下を動作させるため。
 
     if (question.length > maxLength) {
       setError(`質問は${maxLength}文字以内で入力してください。`);
@@ -28,24 +31,24 @@ const CreateQuestion: React.FC = () => {
         return;
       }
     }
+    setError(''); //errorがないとき
 
-    setError('');
     const questionId = new Date().getTime().toString(); // IDを現在の時間を基に作成
     const data = {
       id: questionId,
       question: question,
       options: options, // 配列をそのまま保存
     };
-    localStorage.setItem(questionId, JSON.stringify(data)); // questionIdをキーにしてlocalStorageに保存
+    localStorage.setItem(questionId, JSON.stringify(data)); // questionIdをキーにして、JSON型(Jsのオブジェクト型)でlocalStorageに保存
 
-    console.log(data);
-    router.push(`/question/${questionId}`); //URLの作成
+    console.log(data); //{id: '1725179940498', question: '質問', options: Array(2)}
+    router.push(`/question/${questionId}`); //URLの作成, router.push: 指定したリンクにぺージ遷移
   };
 
   const handleOptionChange = (index: number, value: string) => {
-    const newOptions = [...options];
-    newOptions[index] = value;
-    setOptions(newOptions);
+    const newOptions = [...options]; //配列の複製
+    newOptions[index] = value; //指定されたindexの選択肢を新しい値に更新する
+    setOptions(newOptions); //更新された選択肢の配列をuseState保存する
   };
 
   const addOption = () => {
@@ -60,15 +63,15 @@ const CreateQuestion: React.FC = () => {
       </div>
 
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit} //onClick={関数}  onClick={() => alert('...')}
         className="mt-6 w-full flex flex-col items-center"
       >
         <input
           type="text"
           placeholder="質問を記入する(20文字以内)"
           value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-          required
+          onChange={(e) => setQuestion(e.target.value)} //target: イベントが発生した要素（この場合は input 要素）
+          required //この項目の入力を必須にする
           className="mt-2 w-3/4 p-3 text-gry text-2xl border border-gray-300 rounded-md mb-10"
         />
 

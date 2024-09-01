@@ -15,7 +15,7 @@ const QuestionView: React.FC = () => {
   const { questionId } = useParams<Params>(); //question/questionId URLのquesionid:1111...部分を取得
   const [question, setQuestion] = useState<string | null>(null); //useState<string型 または null型>(初期値)
   const [options, setOptions] = useState<string[]>(['']); //選択肢
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null); // 選択されたインデックスを保存
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null); // 選択されたインデックス（選択肢番号）を保存
   const router = useRouter(); //app内の任意の関数routerオブジェクトにアクセス
 
   useEffect(() => {
@@ -36,6 +36,7 @@ const QuestionView: React.FC = () => {
         setQuestion(questionData.question);
         setOptions(questionData.options); // 同じオブジェクトからoptionsを取得
       } catch (error) {
+        //tryの例外が起きた場合＝データを取得できなかった場合
         console.error('Error parsing stored data:', error);
       }
     }
@@ -46,18 +47,20 @@ const QuestionView: React.FC = () => {
   }
 
   const submitVote = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (selectedIndex === null) return; // インデックスが選択されていない場合は何もしない
+    e.preventDefault(); //停止
+    if (selectedIndex === null) return; // 選択肢を選択していない場合は何もしない
 
-    const votesKey = `votes_${questionId}`;
-    let votes = JSON.parse(localStorage.getItem(votesKey) || '[]');
+    const votesKey = `votes_${questionId}`; //投票データであることをstrage内で明確にするため
+    let votes = JSON.parse(localStorage.getItem(votesKey) || '[]'); //`votes_${questionId}`が保存されていれば取得、なければ[]
 
     if (!votes[selectedIndex]) {
       votes[selectedIndex] = 0;
     }
-    votes[selectedIndex] += 1;
+    votes[selectedIndex] += 1; //0に投票すると0:1となる
+    console.log(votes); //{0:1}
+    // 複数投票すると、{0:1 1:1}, {0:1 1:5 2:1}と要素や数が追加されていく
 
-    localStorage.setItem(votesKey, JSON.stringify(votes));
+    localStorage.setItem(votesKey, JSON.stringify(votes)); //`votes_${questionId}`をキーにして保存
 
     // 結果ページへ遷移
     router.push(`/answer/${questionId}`);
